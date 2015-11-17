@@ -14,6 +14,7 @@ SLEEP_ERROR=30
 ARTIST_SEARCH_BASE = 'http://developer.echonest.com/api/v4/artist/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=hotttnesss-desc&results=99'
 SONG_SEARCH_BASE = 'http://developer.echonest.com/api/v4/song/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=song_hotttnesss-desc&results=99'
 
+
 def database_search(basestr=ARTIST_SEARCH_BASE, sleep=SLEEP_MIN, verbose=False): 
 	try:
 		artists = [urllib2.urlopen(basestr).read()]
@@ -36,7 +37,7 @@ def database_search(basestr=ARTIST_SEARCH_BASE, sleep=SLEEP_MIN, verbose=False):
 
 	return artists
 
-def full_artists(n=1000, minval=0, maxval=.1, **kwargs):
+def full_artists(n=1000, minval=0, maxval=1, **kwargs):
 	hotness = np.linspace(minval, maxval, n)
 	artists = database_search(ARTIST_SEARCH_BASE+"&max_hotttnesss="+str(hotness[1]), **kwargs)
 	artists.extend(database_search(ARTIST_SEARCH_BASE+"&min_hotttnesss="+str(hotness[-2]), **kwargs))
@@ -45,3 +46,18 @@ def full_artists(n=1000, minval=0, maxval=.1, **kwargs):
 		artists.extend(database_search(curstr, **kwargs))
 		print "FINISHED %.4f Percent" % (float(i+1)/len(hotness))
 	return artists
+
+def get_artists(data):
+	if data.__class__ == str:
+		data = [data]
+
+	if not np.iterable(data):
+		raise ValueError("Yo bro data isn't iterable! Check it?")
+
+	output = {}
+	for resp in data:
+		artists = resp.split("[")[1].split("artist_name")[1:]
+		for a in artists:
+			output[a[4:].split("\"")[0]] = True
+			
+	return output
