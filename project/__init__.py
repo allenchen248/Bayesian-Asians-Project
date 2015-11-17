@@ -6,6 +6,7 @@ if not os.path.exists(DOCLOC):
 	os.makedirs(DOCLOC)
 
 from project.store import *
+from project.echonest import *
 
 class File:
 	def __init__(self):
@@ -50,5 +51,4 @@ class File:
 			msg = "Stored File Number "+str(len(self.files))
 		
 		fput(val, ind, msg)
-
 		return
