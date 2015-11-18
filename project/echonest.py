@@ -37,7 +37,7 @@ def database_search(basestr=ARTIST_SEARCH_BASE, sleep=SLEEP_MIN, verbose=False):
 
 	return artists
 
-def full_artists(n=1000, minval=0, maxval=1, **kwargs):
+def full_artists(n=100, minval=0, maxval=1, **kwargs):
 	hotness = np.linspace(minval, maxval, n)
 	artists = database_search(ARTIST_SEARCH_BASE+"&max_hotttnesss="+str(hotness[1]), **kwargs)
 	artists.extend(database_search(ARTIST_SEARCH_BASE+"&min_hotttnesss="+str(hotness[-2]), **kwargs))
@@ -47,7 +47,7 @@ def full_artists(n=1000, minval=0, maxval=1, **kwargs):
 		print "FINISHED %.4f Percent" % (float(i+1)/len(hotness))
 	return artists
 
-def get_artists(data):
+def get_artists(data, splitstr="name"):
 	if data.__class__ == str:
 		data = [data]
 
@@ -56,8 +56,35 @@ def get_artists(data):
 
 	output = {}
 	for resp in data:
-		artists = resp.split("[")[1].split("artist_name")[1:]
+		artists = resp.split("[")[1].split(splitstr)[1:]
 		for a in artists:
 			output[a[4:].split("\"")[0]] = True
-			
+
 	return output
+
+class Artist:
+	def __init__(self, name, resp):
+		if (name.__class__ != str) and (name.__class__ is not None):
+			raise ValueError("Artist Name must be either a string or none")
+
+		self.name = name
+		self.songs = {}
+
+		if resp is None:
+			return
+
+		if resp.__class__ != str:
+			raise ValueError("Artist Class is generated from String!")
+
+		titles = resp.split("[")[1].split("title")[1:]
+		for t in titles:
+			self.songs[t[4:].split("\"")[0]] = None
+
+	def __str__(self):
+		if len(self.songs) == 0:
+			return "Empty Artist with name %s" % self.name
+
+		return "Artist %s, with %d songs." % (self.name, len(self.songs))
+
+	def __repr__(self):
+		return self.__str__()
