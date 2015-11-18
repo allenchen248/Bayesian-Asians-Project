@@ -15,7 +15,7 @@ ARTIST_SEARCH_BASE = 'http://developer.echonest.com/api/v4/artist/search?api_key
 SONG_SEARCH_BASE = 'http://developer.echonest.com/api/v4/song/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=song_hotttnesss-desc&results=99'
 
 
-def database_search(basestr=ARTIST_SEARCH_BASE, sleep=SLEEP_MIN, verbose=False): 
+def database_search(basestr=ARTIST_SEARCH_BASE, maxval=10, sleep=SLEEP_MIN, verbose=False): 
 	try:
 		artists = [urllib2.urlopen(basestr).read()]
 	except HTTPError:
@@ -23,7 +23,7 @@ def database_search(basestr=ARTIST_SEARCH_BASE, sleep=SLEEP_MIN, verbose=False):
 			print "SLEEPING FOR %d SECONDS; TOO MANY REQUESTS" % SLEEP_ERROR
 		time.sleep(SLEEP_ERROR)
 		return artist_search(basestr, sleep, verbose)
-	for i in xrange(1,10):
+	for i in xrange(1,maxval):
 		try:
 			artists.append(urllib2.urlopen(basestr+"&start="+str(i*99)).read())
 			time.sleep(sleep)
@@ -47,18 +47,32 @@ def full_artists(n=100, minval=0, maxval=1, **kwargs):
 		print "FINISHED %.4f Percent" % (float(i+1)/len(hotness))
 	return artists
 
-def get_artists(data, splitstr="name"):
+def get_field(data, field="name", value=None):
 	if data.__class__ == str:
 		data = [data]
 
 	if not np.iterable(data):
 		raise ValueError("Yo bro data isn't iterable! Check it?")
 
+	if (value.__class__ != str) and (value is not None):
+		raise ValueError("Yo dude you passed in a bad value for value.")
+
 	output = {}
 	for resp in data:
-		artists = resp.split("[")[1].split(splitstr)[1:]
+		artists = resp.split("[")[1].split("{\"")[1:]
 		for a in artists:
-			output[a[4:].split("\"")[0]] = True
+			try:
+				name = a.split(field)[1][4:].split("\"")[0]
+				if value is None:
+					output[name] = None
+				else:
+					val = a.split(value)[1][4:].split("\"")[0]
+					if name in output:
+						output[name].append(val)
+					else:
+						output[name] = [val]
+			except IndexError:
+				pass
 
 	return output
 
@@ -73,12 +87,63 @@ class Artist:
 		if resp is None:
 			return
 
-		if resp.__class__ != str:
-			raise ValueError("Artist Class is generated from String!")
+		elif resp.__class__ == dict:
+			self.songs = resp
+			return self
 
-		titles = resp.split("[")[1].split("title")[1:]
-		for t in titles:
-			self.songs[t[4:].split("\"")[0]] = None
+		elif resp.__class__ == str:
+			titles = resp.split("[")[1].split("title")[1:]
+			for t in titles:
+				self.songs[t[4:].split("\"")[0]] = None
+			return
+
+		elif resp.__class__ == list:
+			self.songs = get_field(resp, "title")
+			return
+
+		raise ValueError("Plz give me a string!")
+
+	@classmethod
+	def add(cls, first, second):
+		if first.name != second.name:
+			raise ValueError("Can only add together artists of the same name!")
+
+		song = np.copy(first.songs)
+		for k,v in second.songs.iteritems():
+			song[k] = v
+
+		return cls(first.name, song)
+
+	@classmethod
+	def from_name(cls, name, ids, basestr=SONG_SEARCH_BASE):
+		output = []
+		for i in ids:
+			query = basestr+"&artist_id="+i
+			try:
+				output.append(cls(name, database_search(query, maxval=3)))
+			except HTTPError as e:
+				print e
+				raise ValueError("You failed.")
+
+		cur = output[0]
+		for i in xrange(1,len(output)):
+			cur = cls.add(cur, output[i])
+
+		return cur
+
+	@classmethod
+	def from_dict(cls, artists):
+		output = []
+		failed = {}
+		for i,(k,v) in enumerate(artists.iteritems()):
+			try:
+				output.append(cls.from_name(k, v))
+			except:
+				failed[k] = v
+
+			time.sleep(SLEEP_MIN)
+			print "\r Finished with %.2f Percent!" % (100*float(i)/len(artists))
+		return output, failed
 
 	def __str__(self):
 		if len(self.songs) == 0:
