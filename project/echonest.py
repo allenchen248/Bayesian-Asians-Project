@@ -76,6 +76,37 @@ def get_field(data, field="name", value=None):
 
 	return output
 
+class CachedData:
+	def __init__(self, input_dict):
+		self.internal_dict = [(k,v) for k,v in input_dict.iteritems()]
+		self.cur_index = 0
+		self.data_dict = {}
+		self.failed_dict = {}
+		self.frozen = False
+
+	def remaining(self):
+		return len(self.internal_dict)-self.cur_index
+
+	def get(self):
+		if self.frozen == True:
+			raise ValueError("Tried to move on without reporting results from previous!")
+
+		if self.cur_index == len(self.internal_dict):
+			raise IndexError("No more values!")
+
+		self.cur_index += 1
+		self.frozen = True
+		return self.internal_dict[self.cur_index-1]
+
+	def success(self, data):
+		self.data_dict[self.cur_index-1] = data
+		self.frozen = False
+
+	def failed(self):
+		k,v = self.internal_dict[self.cur_index-1]
+		self.failed_dict[k] = v
+		self.frozen = False
+
 class Artist:
 	def __init__(self, name, resp):
 		if (name.__class__ != str) and (name.__class__ is not None):
@@ -130,6 +161,20 @@ class Artist:
 			cur = cls.add(cur, output[i])
 
 		return cur
+
+	@classmethod
+	def from_cached(cls, cacheddata):
+		for i in xrange(cacheddata.remaining()):
+			k,v = cacheddata.get()
+			try:
+				cacheddata.success(cls.from_name(k, v))
+			except:
+				cacheddata.failed()
+
+			time.sleep(SLEEP_MIN)
+			print "\r Finished with %.2f Percent!" % (100*float(i)/len(artists))
+
+		return cacheddata
 
 	@classmethod
 	def from_dict(cls, artists):
