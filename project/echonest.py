@@ -89,7 +89,7 @@ class CachedData:
 
 	def get(self):
 		if self.frozen == True:
-			raise ValueError("Tried to move on without reporting results from previous!")
+			return self.internal_dict[self.cur_index-1]
 
 		if self.cur_index == len(self.internal_dict):
 			raise IndexError("No more values!")
