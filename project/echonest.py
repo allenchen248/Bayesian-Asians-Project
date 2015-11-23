@@ -114,6 +114,7 @@ class Artist:
 
 		self.name = name
 		self.songs = {}
+		self.processed = False
 
 		if resp is None:
 			return
@@ -133,6 +134,12 @@ class Artist:
 			return
 
 		raise ValueError("Plz give me a string!")
+
+	def process(self):
+		if self.processed == True:
+			return
+
+		raise NotImplementedError("NOT YET DONE")
 
 	@classmethod
 	def add(cls, first, second):
