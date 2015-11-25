@@ -17,7 +17,8 @@ SONG_SEARCH_BASE = 'http://developer.echonest.com/api/v4/song/search?api_key=CBC
 
 attrs = ['audio_summary', 'artist_discovery', 'artist_discovery_rank', 'artist_familiarity', 'artist_familiarity_rank', \
 			'artist_hotttnesss', 'artist_hotttnesss_rank', 'artist_location', 'song_currency', 'song_currency_rank', \
-			'song_hotttnesss', 'song_hotttnesss_rank', 'song_type']
+			'song_hotttnesss', 'song_hotttnesss_rank', 'song_type', 'tracks', 'id:musixmatch-WW']
+SONG_PROFILE = 'http://developer.echonest.com/api/v4/song/profile?api_key=CBCEMBUU5RKMZCANM&format=json'
 SONG_PROFILE_BASE = 'http://developer.echonest.com/api/v4/song/profile?api_key=CBCEMBUU5RKMZCANM&format=json'
 for a in attrs:
 	SONG_PROFILE_BASE += "&bucket="+a
