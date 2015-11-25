@@ -1,5 +1,6 @@
 import urllib2
 import os
+import ast
 import time
 import numpy as np
 
@@ -14,15 +15,23 @@ SLEEP_ERROR=30
 ARTIST_SEARCH_BASE = 'http://developer.echonest.com/api/v4/artist/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=hotttnesss-desc&results=99'
 SONG_SEARCH_BASE = 'http://developer.echonest.com/api/v4/song/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=song_hotttnesss-desc&results=99'
 
+attrs = ['audio_summary', 'artist_discovery', 'artist_discovery_rank', 'artist_familiarity', 'artist_familiarity_rank', \
+			'artist_hotttnesss', 'artist_hotttnesss_rank', 'artist_location', 'song_currency', 'song_currency_rank', \
+			'song_hotttnesss', 'song_hotttnesss_rank', 'song_type']
+SONG_PROFILE_BASE = 'http://developer.echonest.com/api/v4/song/profile?api_key=CBCEMBUU5RKMZCANM&format=json'
+for a in attrs:
+	SONG_PROFILE_BASE += "&bucket="+a
 
 def database_search(basestr=ARTIST_SEARCH_BASE, maxval=10, sleep=SLEEP_MIN, verbose=False): 
 	try:
 		artists = [urllib2.urlopen(basestr).read()]
-	except HTTPError:
+		time.sleep(sleep)
+	except HTTPError as e:
 		if verbose:
-			print "SLEEPING FOR %d SECONDS; TOO MANY REQUESTS" % SLEEP_ERROR
+			print e
+			print "SLEEPING FOR %d SECONDS" % SLEEP_ERROR
 		time.sleep(SLEEP_ERROR)
-		return artist_search(basestr, sleep, verbose)
+		return database_search(basestr, maxval, sleep, verbose)
 	for i in xrange(1,maxval):
 		try:
 			artists.append(urllib2.urlopen(basestr+"&start="+str(i*99)).read())
@@ -107,6 +116,29 @@ class CachedData:
 		self.failed_dict[k] = v
 		self.frozen = False
 
+class Song:
+	def __init__(self, name, idvals, resp, verbose=True):
+		self.name = name
+		self.id = idvals
+
+		self.resp = []
+		for r in resp:
+			try:
+				try:
+					self.resp.append(ast.literal_eval(r[0])['response']['songs'][0])
+				except ValueError:
+					if verbose:
+						print "Error on Song %s, ID Number %d" % (self.name, len(self.resp))
+					self.resp.append(r[0])
+			except IndexError:
+				self.resp.append({})
+
+	def __str__(self):
+		return "Song %s with %d attributes" % (self.id, np.sum([len(r) for r in self.resp]))
+
+	def __repr__(self):
+		return self.__str__()
+
 class Artist:
 	def __init__(self, name, resp):
 		if (name.__class__ != str) and (name.__class__ is not None):
@@ -125,21 +157,25 @@ class Artist:
 
 		elif resp.__class__ == str:
 			titles = resp.split("[")[1].split("title")[1:]
-			for t in titles:
-				self.songs[t[4:].split("\"")[0]] = None
+			ids = resp.split("[")[1].split("\"id")[1:]
+			for i in xrange(len(titles)):
+				self.songs[titles[i][4:].split("\"")[0]] = [ids[i][4:].split("\"")[0]]
 			return
 
 		elif resp.__class__ == list:
-			self.songs = get_field(resp, "title")
+			self.songs = get_field(resp, "title", value='\"id')
 			return
 
 		raise ValueError("Plz give me a string!")
 
-	def process(self):
+	def process(self, verbose=False):
 		if self.processed == True:
 			return
 
-		raise NotImplementedError("NOT YET DONE")
+		for k,v in self.songs.iteritems():
+			self.songs[k] = Song(k, v, [database_search(SONG_PROFILE_BASE+"&id="+val, 1, verbose=verbose) for val in v])
+
+		self.processed = True
 
 	@classmethod
 	def add(cls, first, second):
