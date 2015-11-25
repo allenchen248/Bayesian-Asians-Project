@@ -207,15 +207,19 @@ class Artist:
 
 	@classmethod
 	def from_cached(cls, cacheddata):
-		for i in xrange(cacheddata.remaining()):
+		total = len(cacheddata.internal_dict)
+		left = cacheddata.cur_index
+		for i in xrange(total-left):
 			k,v = cacheddata.get()
 			try:
-				cacheddata.success(cls.from_name(k, v))
+				artist = cls.from_name(k, v)
+				artist.process()
+				cacheddata.success(artist)
 			except:
 				cacheddata.failed()
 
 			time.sleep(SLEEP_MIN)
-			print "\r Finished with %.2f Percent!" % (100*float(i)/len(artists))
+			print "\r Finished with %.4f Percent!" % (100*float(i)/total)
 
 		return cacheddata
 

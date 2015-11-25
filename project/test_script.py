@@ -17,3 +17,15 @@ print "FINISHED MILEY"
 name = "Justin Bieber"
 C = Artist.from_name(name, ad[name])
 C.process(True)
+
+from project.store import fread
+from project.echonest import CachedData, Artist
+
+# Read in file
+a_dict = fread("./data/RichardArtist.pkl")
+
+# Generate a cached data object
+cd = CachedData(a_dict)
+
+# Find out all artist info from these.
+Artist.from_cached(cd)
