@@ -127,9 +127,12 @@ class Song:
 				try:
 					self.resp.append(ast.literal_eval(r[0])['response']['songs'][0])
 				except ValueError:
-					if verbose:
-						print "Error on Song %s, ID Number %d" % (self.name, len(self.resp))
-					self.resp.append(r[0])
+					try:
+						self.resp.append(ast.literal_eval(r[0].replace("null", "None"))['response']['songs'][0])
+					except ValueError:
+						if verbose:
+							print "Error on Song %s, ID Number %d" % (self.name, len(self.resp))
+						self.resp.append(r[0])
 			except IndexError:
 				self.resp.append({})
 

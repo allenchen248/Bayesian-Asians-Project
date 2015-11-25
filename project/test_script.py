@@ -29,3 +29,9 @@ cd = CachedData(a_dict)
 
 # Find out all artist info from these.
 Artist.from_cached(cd)
+
+for k,song in s.iteritems():
+	for v in song.resp:
+		if v.__class__ == str:
+			bad = v
+			print "FOUND."
