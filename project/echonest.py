@@ -6,6 +6,8 @@ import numpy as np
 
 from urllib2 import HTTPError
 
+from project.lyrics import pull_lyrics
+
 # API Key: CBCEMBUU5RKMZCANM
 # Consumer Key: de5a80a9b8bce49952c3da59306b0c87
 # Shared Secret: nrvPzmksQkmeK1kAXiK9vw
@@ -121,6 +123,7 @@ class Song:
 	def __init__(self, name, idvals, resp, verbose=True):
 		self.name = name
 		self.id = idvals
+		self.lyrics = None
 
 		self.resp = []
 		for r in resp:
@@ -136,6 +139,13 @@ class Song:
 						self.resp.append(r[0])
 			except IndexError:
 				self.resp.append({})
+
+	def get_lyrics(self):
+		self.lyrics = []
+		for r in self.resp:
+			self.lyrics.extend(pull_lyrics(r['foreign_ids']))
+
+		return self.lyrics
 
 	def __str__(self):
 		return "Song %s with %d attributes" % (self.id, np.sum([len(r) for r in self.resp]))
