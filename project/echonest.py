@@ -99,6 +99,16 @@ class CachedData:
 	def remaining(self):
 		return len(self.internal_dict)-self.cur_index
 
+	def permute(self):
+		if self.cur_index == 0:
+			self.internal_dict = np.random.permutation(self.internal_dict)
+		else:
+			self.internal_dict = np.random.permutation(self.internal_dict[self.cur_index:])
+			self.cur_index = 0
+
+	def check_duplicate(self):
+		
+
 	def get(self):
 		if self.frozen == True:
 			return self.internal_dict[self.cur_index-1]
