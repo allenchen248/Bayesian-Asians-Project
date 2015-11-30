@@ -100,14 +100,15 @@ class CachedData:
 		return len(self.internal_dict)-self.cur_index
 
 	def permute(self):
-		if self.cur_index == 0:
-			self.internal_dict = np.random.permutation(self.internal_dict)
-		else:
-			self.internal_dict = np.random.permutation(self.internal_dict[self.cur_index:])
-			self.cur_index = 0
+		neworder = np.random.permutation(xrange(len(self.internal_dict[self.cur_index:])))
+		newarr = [None]*len(self.internal_dict)
+		for i in xrange(self.cur_index):
+			newarr[i] = self.internal_dict[i]
 
-	def check_duplicate(self):
-		
+		for i, v in enumerate(neworder):
+			newarr[i+self.cur_index] = self.internal_dict[v]
+
+		self.internal_dict = newarr
 
 	def get(self):
 		if self.frozen == True:

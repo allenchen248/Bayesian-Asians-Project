@@ -22,7 +22,7 @@ from project.store import fread
 from project.echonest import CachedData, Artist
 
 # Read in file
-a_dict = fread("./data/RichardArtist.pkl")
+a_dict = fread("./data/AllenArtist.pkl")
 
 # Generate a cached data object
 cd = CachedData(a_dict)
