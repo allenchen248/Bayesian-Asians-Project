@@ -12,7 +12,6 @@ from project.lyrics import pull_lyrics
 # Consumer Key: de5a80a9b8bce49952c3da59306b0c87
 # Shared Secret: nrvPzmksQkmeK1kAXiK9vw
 
-# pass: Allenchenissexy
 API_KEYS = ['CBCEMBUU5RKMZCANM','EJCLKDYO0IG8BPAMD','N1BKLELC5KB7IBR6K', 'KESZKE2QUN4SVPNHC',
 		'FJRU9KPN5HVDJK8EZ', 'NLFXA1IBUGVSWCIFQ', 'F0ABVNJI3MVUYSSQJ', 'B1KXAHKSVAXRNQSEW',
 		'GE8QKD8K9LTZJOUSW', 'OO0TYEIFXLCSTVEZ7', 'U2W0OZHN52FM4HW9K', 'AAVGZKDPBNKWOBMRM', 
@@ -31,7 +30,7 @@ class SongBase:
 		self.cur = 0
 
 	def __add__(self, other):
-		val = self.prefix+self.keys[self.cur]+self.postfix+other
+		val; = self.prefix+self.keys[self.cur]+self.postfix+other
 
 		self.cur += 1
 		if self.cur == len(self.keys):

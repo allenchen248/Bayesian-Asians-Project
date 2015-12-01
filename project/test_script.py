@@ -44,7 +44,7 @@ for k,song in s.iteritems():
 from project.store import fread, fwrite
 from project.echonest import CachedData, Artist
 
-for i in xrange(10,15):
+for i in xrange(0,5):
 	# Read in file
 	a_dict = fread("data"+str(i)+".pkl")
 
