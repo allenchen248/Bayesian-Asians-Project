@@ -54,8 +54,8 @@ class SongBase:
 
 
 
-SLEEP_MIN = 1
-SLEEP_ERROR=30
+SLEEP_MIN = 0.5
+SLEEP_ERROR=10
 #ARTIST_SEARCH_BASE = 'http://developer.echonest.com/api/v4/artist/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=hotttnesss-desc&results=99'
 ARTIST_SEARCH_BASE = SongBase(API_KEYS, '&format=json&sort=song_hotttnesss-desc&results=99', 'http://developer.echonest.com/api/v4/song/search?api_key=')
 
@@ -267,7 +267,6 @@ class Artist:
 		output = []
 		for i in ids:
 			query = basestr+"&artist_id="+i
-			print query
 			try:
 				output.append(cls(name, database_search(query, maxval=3)))
 			except HTTPError as e:
