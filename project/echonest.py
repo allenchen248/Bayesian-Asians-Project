@@ -12,16 +12,65 @@ from project.lyrics import pull_lyrics
 # Consumer Key: de5a80a9b8bce49952c3da59306b0c87
 # Shared Secret: nrvPzmksQkmeK1kAXiK9vw
 
+# pass: Allenchenissexy
+API_KEYS = ['CBCEMBUU5RKMZCANM','EJCLKDYO0IG8BPAMD','N1BKLELC5KB7IBR6K', 'KESZKE2QUN4SVPNHC',
+		'FJRU9KPN5HVDJK8EZ', 'NLFXA1IBUGVSWCIFQ', 'F0ABVNJI3MVUYSSQJ', 'B1KXAHKSVAXRNQSEW',
+		'GE8QKD8K9LTZJOUSW', 'OO0TYEIFXLCSTVEZ7', 'U2W0OZHN52FM4HW9K', 'AAVGZKDPBNKWOBMRM', 
+		'1M1F5GLMPOQ1PAIVI', 'UJ8CU9AISIVDZPYDX', 'MLQHLZWLSRXZ3VKWM', 'GP1TQLH0UMYBWSWY1', 
+		'9QX6MXTEZXIFRQHR9', 'CCLZCYBZW5RRNFJIV', 'GNPX5JOKHDWGK201K', 'GW0FZNNQZZFISWDPU', 
+		'ERKK9SPSKBJZWULNK', 'IXSAQDFFLJFL98CWW', 'ZD2RT50EO6V7IZ9BC', 'ELC9POZKIDYTHURAX',
+		'IJMKESRYUTLWQP9VN', 'VMAIHRDPYE8ZWGBRK', 'H4CSPTRC996SCDAWX', 'RJTL5RUUMY7Y94JZY',
+		'GD1LZYWFFAH8NX5WT', '3HEGCDTFC3XAYELGJ', 'EQIGA9KKDFX0OBAM7', 'JEJODYWILNWSAHDKR',
+		'2OBYASF4JYKO3N8G6']
+
+class SongBase:
+	def __init__(self, keys, postfix, prefix='http://developer.echonest.com/api/v4/artist/search?api_key='):
+		self.keys = keys
+		self.prefix = prefix
+		self.postfix = postfix
+		self.cur = 0
+
+	def __add__(self, other):
+		val = self.prefix+self.keys[self.cur]+self.postfix+other
+
+		self.cur += 1
+		if self.cur == len(self.keys):
+			self.cur = 0
+
+		return val
+
+	def __radd__(self, other):
+		val = other+self.prefix+self.keys[self.cur]+self.postfix
+
+		self.cur += 1
+		if self.cur == len(self.keys):
+			self.cur = 0
+
+		return val
+
+	def __iadd__(self, other):
+		self.postfix += other
+		return self
+
+
+
 SLEEP_MIN = 1
 SLEEP_ERROR=30
-ARTIST_SEARCH_BASE = 'http://developer.echonest.com/api/v4/artist/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=hotttnesss-desc&results=99'
-SONG_SEARCH_BASE = 'http://developer.echonest.com/api/v4/song/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=song_hotttnesss-desc&results=99'
+#ARTIST_SEARCH_BASE = 'http://developer.echonest.com/api/v4/artist/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=hotttnesss-desc&results=99'
+ARTIST_SEARCH_BASE = SongBase(API_KEYS, '&format=json&sort=song_hotttnesss-desc&results=99', 'http://developer.echonest.com/api/v4/song/search?api_key=')
+
+#SONG_SEARCH_BASE = 'http://developer.echonest.com/api/v4/song/search?api_key=CBCEMBUU5RKMZCANM&format=json&sort=song_hotttnesss-desc&results=99'
+SONG_SEARCH_BASE = SongBase(API_KEYS, '&format=json&sort=song_hotttnesss-desc&results=99', 'http://developer.echonest.com/api/v4/song/search?api_key=')
 
 attrs = ['audio_summary', 'artist_discovery', 'artist_discovery_rank', 'artist_familiarity', 'artist_familiarity_rank', \
 			'artist_hotttnesss', 'artist_hotttnesss_rank', 'artist_location', 'song_currency', 'song_currency_rank', \
 			'song_hotttnesss', 'song_hotttnesss_rank', 'song_type', 'tracks', 'id:musixmatch-WW']
-SONG_PROFILE = 'http://developer.echonest.com/api/v4/song/profile?api_key=CBCEMBUU5RKMZCANM&format=json'
-SONG_PROFILE_BASE = 'http://developer.echonest.com/api/v4/song/profile?api_key=CBCEMBUU5RKMZCANM&format=json'
+
+#SONG_PROFILE = 'http://developer.echonest.com/api/v4/song/profile?api_key=CBCEMBUU5RKMZCANM&format=json'
+SONG_PROFILE = SongBase(API_KEYS, '&format=json', 'http://developer.echonest.com/api/v4/song/profile?api_key=')
+
+#SONG_PROFILE_BASE = 'http://developer.echonest.com/api/v4/song/profile?api_key=CBCEMBUU5RKMZCANM&format=json'
+SONG_PROFILE_BASE = SongBase(API_KEYS, '&format=json', 'http://developer.echonest.com/api/v4/song/profile?api_key=')
 for a in attrs:
 	SONG_PROFILE_BASE += "&bucket="+a
 
@@ -218,6 +267,7 @@ class Artist:
 		output = []
 		for i in ids:
 			query = basestr+"&artist_id="+i
+			print query
 			try:
 				output.append(cls(name, database_search(query, maxval=3)))
 			except HTTPError as e:

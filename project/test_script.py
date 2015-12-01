@@ -35,3 +35,27 @@ for k,song in s.iteritems():
 		if v.__class__ == str:
 			bad = v
 			print "FOUND."
+
+
+
+
+
+# AFTER THANKSGIVING
+from project.store import fread, fwrite
+from project.echonest import CachedData, Artist
+
+for i in xrange(0,6):
+	# Read in file
+	a_dict = fread("data"+str(i)+".pkl")
+
+	# Generate cached data object
+	cd = CachedData(a_dict)
+
+	# Find out artist info
+	Artist.from_cached(cd)
+
+	# Write to file
+	fwrite(cd, "processed"+str(i)+".pkl")
+
+	# Null for garbage collect
+	cd = None
