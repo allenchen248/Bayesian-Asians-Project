@@ -109,22 +109,23 @@ def grab_lyrics(params=['hello', 'adele'], urlbase="http://www.lyrics.com/search
 
 	return output
 
-urllib2.urlopen("http://www.lyrics.com/the-hills-lyrics-the-weeknd.html")
+def testme():
+	urllib2.urlopen("http://www.lyrics.com/the-hills-lyrics-the-weeknd.html")
 
-r = urllib2.urlopen("http://www.lyrics.com/earned-it-fifty-shades-of-grey-lyrics-the-weeknd.html")
+	r = urllib2.urlopen("http://www.lyrics.com/earned-it-fifty-shades-of-grey-lyrics-the-weeknd.html")
 
-t = r.read()
+	t = r.read()
 
-t.split("lyric_space")[1].split("itemprop=")[1][14:].split("class=\"PRINTONLY\"")[0][:-42]
+	t.split("lyric_space")[1].split("itemprop=")[1][14:].split("class=\"PRINTONLY\"")[0][:-42]
 
-r = urllib2.urlopen("http://www.lyrics.com/search.php?keyword=the+weekend+the+hills&what=all&search_btn=Search")
+	r = urllib2.urlopen("http://www.lyrics.com/search.php?keyword=the+weekend+the+hills&what=all&search_btn=Search")
 
-t = r.read()
+	t = r.read()
 
-t.split("rightcontent")[1].split("bottom_wrapper")[0].split("href")[1:-1]
+	t.split("rightcontent")[1].split("bottom_wrapper")[0].split("href")[1:-1]
 
-urls = []
-for re in t:
-	vals = re.split("class=")
-	if (len(vals) > 1) and (vals[1][1:15] == 'lyrics_preview'):
-		urls.append(NLY_BASE+vals[0][2:-2])
+	urls = []
+	for re in t:
+		vals = re.split("class=")
+		if (len(vals) > 1) and (vals[1][1:15] == 'lyrics_preview'):
+			urls.append(NLY_BASE+vals[0][2:-2])

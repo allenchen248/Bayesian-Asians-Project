@@ -202,7 +202,7 @@ class Song:
 		# Cleaning to prevent duplicates
 		for r in self.resp:
 			try:
-				r['title'] = re.sub(r'\<.*?\>', '', r['title']).strip()
+				r['title'] = re.sub(r'\(.*?\)', '', r['title']).strip()
 			except KeyError:
 				raise ValueError("Title Doesn't Exist!")
 
