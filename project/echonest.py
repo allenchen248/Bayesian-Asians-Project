@@ -199,6 +199,13 @@ class Song:
 			except IndexError:
 				self.resp.append({})
 
+		# Cleaning to prevent duplicates
+		for r in self.resp:
+			try:
+				r['title'] = re.sub(r'\<.*?\>', '', r['title']).strip()
+			except KeyError:
+				raise ValueError("Title Doesn't Exist!")
+
 	def get_lyrics(self, get_full=True):
 		self.lyrics = []
 		if get_full:

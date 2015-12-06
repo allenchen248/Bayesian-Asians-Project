@@ -68,7 +68,7 @@ def grab_lyrics_NOT_ON_ALLEN_COMPUTER_BECAUSE_BLOCKED(params=['hello', 'adele'],
 
 	return output
 
-def grab_lyrics(params, urlbase="http://www.lyrics.com/search.php?keyword=", urlpost="&what=all&search_btn=Search"):
+def grab_lyrics(params=['hello', 'adele'], urlbase="http://www.lyrics.com/search.php?keyword=", urlpost="&what=all&search_btn=Search"):
 	# Set up URL
 	url = urlbase
 	for p in params:
