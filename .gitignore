@@ -1,2 +1,3 @@
 /project/pkl_files/*
 *.pyc
+.ipynb_checkpoints
