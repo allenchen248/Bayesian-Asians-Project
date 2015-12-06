@@ -6,7 +6,7 @@ import numpy as np
 
 from urllib2 import HTTPError
 
-from project.lyrics import pull_lyrics
+from project.lyrics import pull_lyrics, grab_lyrics
 
 # API Key: CBCEMBUU5RKMZCANM
 # Consumer Key: de5a80a9b8bce49952c3da59306b0c87
@@ -30,7 +30,7 @@ class SongBase:
 		self.cur = 0
 
 	def __add__(self, other):
-		val; = self.prefix+self.keys[self.cur]+self.postfix+other
+		val = self.prefix+self.keys[self.cur]+self.postfix+other
 
 		self.cur += 1
 		if self.cur == len(self.keys):
@@ -199,10 +199,16 @@ class Song:
 			except IndexError:
 				self.resp.append({})
 
-	def get_lyrics(self):
+	def get_lyrics(self, get_full=True):
 		self.lyrics = []
-		for r in self.resp:
-			self.lyrics.extend(pull_lyrics(r['foreign_ids']))
+		if get_full:
+			for r in self.resp:
+				params = r['artist_name'].split(" ")
+				params.extend(r['title'].split(" "))
+				self.lyrics.extend(grab_lyrics(params))
+		else:
+			for r in self.resp:
+				self.lyrics.extend(pull_lyrics(r['foreign_ids']))
 
 		return self.lyrics
 
