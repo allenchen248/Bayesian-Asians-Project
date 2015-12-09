@@ -25,7 +25,7 @@ def gen_keys(alist):
 		if a in ad:
 			output[ad[a]] = ars[ad[a]]
 		elif a.lower() in ad:
-			output[ad[a]] = ars[ad[a.lower()]]
+			output[ad[a.lower()]] = ars[ad[a.lower()]]
 		else: 
 			failed.append(a)
 
