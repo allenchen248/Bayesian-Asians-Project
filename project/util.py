@@ -19,6 +19,7 @@ def gen_keys(alist):
 		ad[k] = k
 		ad[k.lower()] = k
 		ad[k.split(",")[0]] = k
+		ad[k.strip()] = k
 
 	for a in alist:
 		if a in ad:

@@ -144,6 +144,19 @@ class CachedData:
 		self.failed_dict = {}
 		self.frozen = False
 
+	def intersect(self, input_dict):
+		output = {}
+		failed = {}
+		for v in self.data_dict.itervalues():
+			if v.name in input_dict:
+				output[v.name] = v
+		
+		for k,v in input_dict.iteritems():
+			if k not in output:
+				failed[k] = v
+
+		return output, failed
+
 	def remaining(self):
 		return len(self.internal_dict)-self.cur_index
 
