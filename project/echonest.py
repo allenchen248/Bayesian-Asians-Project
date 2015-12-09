@@ -144,8 +144,7 @@ class CachedData:
 		self.failed_dict = {}
 		self.frozen = False
 
-	def intersect(self, input_dict):
-		output = {}
+	def intersect(self, input_dict, output={}):
 		failed = {}
 		for v in self.data_dict.itervalues():
 			if v.name in input_dict:

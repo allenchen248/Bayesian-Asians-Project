@@ -68,6 +68,11 @@ for v in cd.data_dict.itervalues():
 		v.get_lyrics()
 		prg.increment(1./totallen)
 
-for v in cd.data_dict.itervalues():
+totallen = len(alk)
+i=0
+for v in alk.itervalues():
+	singlelen = len(v.songs)
 	for k,v in v.songs.iteritems():
 		v.get_lyrics()
+		i += 1./singlelen
+		print "\rFinished with %.2f Percent!" % (100.*i)
