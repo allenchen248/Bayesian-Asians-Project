@@ -59,3 +59,15 @@ for i in xrange(0,5):
 
 	# Null for garbage collect
 	cd = None
+
+from util.progress import Progress
+prg = Progress(len(cd.data_dict))
+for v in cd.data_dict.itervalues():
+	totallen = len(v.songs)
+	for k,v in v.songs.iteritems():
+		v.get_lyrics()
+		prg.increment(1./totallen)
+
+for v in cd.data_dict.itervalues():
+	for k,v in v.songs.iteritems():
+		v.get_lyrics()

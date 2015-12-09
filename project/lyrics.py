@@ -84,28 +84,32 @@ def grab_lyrics(params=['hello', 'adele'], urlbase="http://www.lyrics.com/search
 			raise ValueError("Server stopped connecting!")
 		return []
 
-	tl = r.split("rightcontent")[1].split("bottom_wrapper")[0].split("href")[1:-1]
+	try:
+		tl = r.split("rightcontent")[1].split("bottom_wrapper")[0].split("href")[1:-1]
 
-	# Grab hyperlinks
-	hrefs = []
-	for t in tl:
-		vals = t.split("class=")
-		if (len(vals) > 1) and (vals[1][1:15] == 'lyrics_preview'):
-			hrefs.append(NLY_BASE+vals[0][2:-2])
+		# Grab hyperlinks
+		hrefs = []
+		for t in tl:
+			vals = t.split("class=")
+			if (len(vals) > 1) and (vals[1][1:15] == 'lyrics_preview'):
+				hrefs.append(NLY_BASE+vals[0][2:-2])
 
-	# Process into lyrics
-	output = []
-	for ur in hrefs:
-		try:
-			resp = urllib2.urlopen(ur).read()
+		# Process into lyrics
+		output = []
+		for ur in hrefs:
 			try:
-				output.append(re.sub(r'\<.*?\>', '', resp.split("lyric_space")[1].split("itemprop=")[1][14:].split("class=\"PRINTONLY\"")[0][:-42]).strip())
-			except IndexError:
-				pass
-		except BadStatusLine:
-			if throw_except:
-				raise ValueError("Server Stopped Responding!")
-		time.sleep(SLEEP_BASE)
+				resp = urllib2.urlopen(ur).read()
+				try:
+					output.append(re.sub(r'\<.*?\>', '', resp.split("lyric_space")[1].split("itemprop=")[1][14:].split("class=\"PRINTONLY\"")[0][:-42]).strip())
+				except IndexError:
+					pass
+			except BadStatusLine:
+				if throw_except:
+					raise ValueError("Server Stopped Responding!")
+			time.sleep(SLEEP_BASE)
+	except IndexError:
+		# Implies that no lyrics exist
+		return []
 
 	return output
 
