@@ -22,9 +22,9 @@ def gen_keys(alist):
 
 	for a in alist:
 		if a in ad:
-			output[a] = ars[ad[a]]
+			output[ad[a]] = ars[ad[a]]
 		elif a.lower() in ad:
-			output[a] = ars[ad[a.lower()]]
+			output[ad[a]] = ars[ad[a.lower()]]
 		else: 
 			failed.append(a)
 
