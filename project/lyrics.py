@@ -34,6 +34,24 @@ u = d['url']
 
 test = requests.get(u).text
 
+def gen_database(dbfile):
+	output = {}
+	with open(dbfile, 'r') as f:
+		for x in xrange(17):
+			f.next()
+		words = f.next().strip().split(",")[1:]
+		for line in f:
+			song = line.strip().split(",")
+			odict = {}
+			for s in song[2:]:
+				vals = s.split(":")
+				if len(vals) != 2:
+					raise ValueError("Not Formatted as Expected")
+				odict[int(vals[0])-1] = int(vals[1])
+
+			output[song[1]] = odict
+	return words, output
+
 def grab_lyrics_NOT_ON_ALLEN_COMPUTER_BECAUSE_BLOCKED(params=['hello', 'adele'], urlbase='http://search.azlyrics.com/search.php?q=', throw_except=False):
 	# Set up URL
 	url = urlbase
