@@ -2,6 +2,7 @@ import urllib2
 import os
 import ast
 import time
+import re
 import numpy as np
 
 from urllib2 import HTTPError
@@ -271,7 +272,11 @@ class Artist:
 			return
 
 		for k,v in self.songs.iteritems():
-			self.songs[k] = Song(k, v, [database_search(SONG_PROFILE_BASE+"&id="+val, 1, verbose=verbose) for val in v])
+			try:
+				self.songs[k] = Song(k, v, [database_search(SONG_PROFILE_BASE+"&id="+val, 1, verbose=verbose) for val in v])
+			except:
+				time.sleep(SLEEP_ERROR)
+				self.songs[k] = Song(k, v, [database_search(SONG_PROFILE_BASE+"&id="+val, 1, verbose=verbose) for val in v])
 
 		self.processed = True
 
@@ -322,15 +327,16 @@ class Artist:
 		return cacheddata
 
 	@classmethod
-	def from_dict(cls, artists):
+	def from_dict(cls, artists, verbose=False):
 		output = []
 		failed = {}
 		for i,(k,v) in enumerate(artists.iteritems()):
 			try:
 				art = cls.from_name(k, v)
-				art.process()
+				art.process(verbose=verbose)
 				output.append(art)
-			except:
+			except HTTPError as e:
+				print e
 				failed[k] = v
 
 			time.sleep(SLEEP_MIN)
