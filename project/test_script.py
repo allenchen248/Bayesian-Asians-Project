@@ -76,3 +76,15 @@ for v in alk.itervalues():
 		v.get_lyrics()
 		i += 1./singlelen
 		print "\rFinished with %.2f Percent!" % (100.*i)
+
+
+from project.store import fread
+fread(FILE)
+totallen = len(arts)
+i = 0
+for v in arts:
+	singlelen = len(v.songs)*totallen
+	for k,v in v.songs.iteritems():
+		v.get_lyrics()
+		i += 1./singlelen
+		print "\rFinished with %.2f Percent!" % (100.*i)

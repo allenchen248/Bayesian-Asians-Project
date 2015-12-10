@@ -327,7 +327,9 @@ class Artist:
 		failed = {}
 		for i,(k,v) in enumerate(artists.iteritems()):
 			try:
-				output.append(cls.from_name(k, v))
+				art = cls.from_name(k, v)
+				art.process()
+				output.append(art)
 			except:
 				failed[k] = v
 
