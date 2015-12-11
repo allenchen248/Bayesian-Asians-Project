@@ -219,6 +219,28 @@ class Song:
 			except KeyError:
 				raise ValueError("Title Doesn't Exist!")
 
+	def get_ids(self, which='foreign_id'):
+		output = []
+		[output.extend([td[which].split(":")[-1] for td in r['tracks']]) for r in self.resp]
+		return output
+
+	def from_database(self, db):
+		if self.lyrics is not None:
+			raise ValueError("Lyrics already Exist!")
+
+		flag = False
+		self.lyrics = []
+		id_list = self.get_ids()
+		for i in id_list:
+			if i in db:
+				self.lyrics.extend([db[i]])
+				flag = True
+
+		if flag:
+			return True
+		else:
+			return False
+
 	def get_lyrics(self, get_full=True):
 		self.lyrics = []
 		if get_full:
