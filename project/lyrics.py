@@ -18,6 +18,9 @@ LYRICS_BASE = 'http://api.musixmatch.com/ws/1.1/track.lyrics.get?apikey=3476eaa8
 NLY_BASE = "http://www.lyrics.com"
 
 def pull_lyrics(fids):
+	"""
+	Pulls lyrics from our musixmatch api-key
+	"""
 	if len(fids) == 0:
 		return []
 
@@ -28,13 +31,10 @@ def pull_lyrics(fids):
 
 	return responses
 
-r = urllib2.urlopen('http://lyrics.wikia.com/api.php?action=lyrics&artist=Cake&song=Dime&fmt=json').read()
-d = ast.literal_eval(r.split("= ")[1])
-u = d['url']
-
-test = requests.get(u).text
-
 def gen_database(dbfile, which=1):
+	"""
+	Takes a SQLite database output file 
+	"""
 	output = {}
 	with open(dbfile, 'r') as f:
 		for x in xrange(17):
@@ -53,6 +53,9 @@ def gen_database(dbfile, which=1):
 	return words, output
 
 def grab_lyrics_NOT_ON_ALLEN_COMPUTER_BECAUSE_BLOCKED(params=['hello', 'adele'], urlbase='http://search.azlyrics.com/search.php?q=', throw_except=False):
+	"""
+	Grabs lyrics from azlyrics.com (now blocked)
+	"""
 	# Set up URL
 	url = urlbase
 	for p in params:
@@ -87,6 +90,9 @@ def grab_lyrics_NOT_ON_ALLEN_COMPUTER_BECAUSE_BLOCKED(params=['hello', 'adele'],
 	return output
 
 def grab_lyrics(params=['hello', 'adele'], urlbase="http://www.lyrics.com/search.php?keyword=", urlpost="&what=all&search_btn=Search"):
+	"""
+	Grabs lyrics from lyrics.com
+	"""
 	# Set up URL
 	url = urlbase
 	for p in params:
@@ -132,6 +138,10 @@ def grab_lyrics(params=['hello', 'adele'], urlbase="http://www.lyrics.com/search
 	return output
 
 def testme():
+	"""
+	Function used to make sure that the lyrics are still working + that the website
+	hasn't blocked us like azlyrics did.
+	"""
 	urllib2.urlopen("http://www.lyrics.com/the-hills-lyrics-the-weeknd.html")
 
 	r = urllib2.urlopen("http://www.lyrics.com/earned-it-fifty-shades-of-grey-lyrics-the-weeknd.html")
@@ -151,3 +161,9 @@ def testme():
 		vals = re.split("class=")
 		if (len(vals) > 1) and (vals[1][1:15] == 'lyrics_preview'):
 			urls.append(NLY_BASE+vals[0][2:-2])
+
+	r = urllib2.urlopen('http://lyrics.wikia.com/api.php?action=lyrics&artist=Cake&song=Dime&fmt=json').read()
+	d = ast.literal_eval(r.split("= ")[1])
+	u = d['url']
+
+	test = requests.get(u).text
