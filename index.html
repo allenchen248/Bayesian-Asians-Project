@@ -44,9 +44,9 @@
 
 <p><img src="images/song_genres.jpeg" alt="song_genres"></p>
 
-<p>When we looked at the feature distribution, we mostly found normal distributions, nothing too crazy. Unfortunately, when we did a pairwise correlation plot between the features and colored the Top 100 different, we found that it was very difficult to distinguish the data points. This will have to be something we keep in mind moving forward. </p>
+<p>When we looked at the feature distribution, we mostly found normal distributions, nothing too crazy. Unfortunately, when we did a pairwise correlation plot between the features and colored the Top 100 different, we found that it was very difficult to distinguish the data points. This will have to be something we keep in mind moving forward. Even for predictors that appear to be very intuitive, such as the correlation between "dancability" and being in the Top 100, do not appear to be very helpful. </p>
 
-<p>TODO: Add in stuff here, IF WE HAVE TIME</p>
+<p><img src="images/dancability_billboard.jpeg" alt="dbill"></p>
 
 <h3>
 <a id="initial-modelling" class="anchor" href="#initial-modelling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initial Modelling</h3>
@@ -63,7 +63,9 @@
 
 <p>In addition, we noticed our dataset was wildly asymmetric and skewed towards negative responses by default. Thus, we decided to subset our training data so it had the same amount of negative and positive responses, creating a balanced dataset. After training an SVM on this balanced dataset, we noticed it didn't score higher than the SVM trained on the asymmetric training dataset.</p>
 
-<p>In conclusion, Random Forest performed the best out of our binary classifiers, with SVM and Logistic Ridge doing better than Logistic Lasso. Feature selection did not seem to improve performance of the classifiers, perhaps because there weren't many high correlating features to Billboard 100. Unfortunately, training models on a balanced dataset also did not significantly improve performance.</p>
+<p>In conclusion, Random Forest performed the best out of our binary classifiers, with SVM and Logistic Ridge doing better than Logistic Lasso. Feature selection did not seem to improve performance of the classifiers, perhaps because there weren't many high correlating features to Billboard 100. Unfortunately, training models on a balanced dataset also did not significantly improve performance. (Image below of results)</p>
+
+<p><img src="images/ROC.jpeg" alt="roc"></p>
 
 <h3>
 <a id="adding-lyrics-to-the-equation" class="anchor" href="#adding-lyrics-to-the-equation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding Lyrics to the Equation</h3>
