@@ -51,15 +51,19 @@
 <h3>
 <a id="initial-modelling" class="anchor" href="#initial-modelling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initial Modelling</h3>
 
-<p>TODO: What is our baseline?</p>
+<p>Because of the way we composed it, our dataset inherently consists of a small minority of songs (7.5%) that were in the Billboard 100 and the vast majority of the artists' other songs that did not make it to the Billboard 100. Interestingly enough, this suggests on average one song out of each album of a famous artist actually makes it into the Billboard 100. The question we ask is what characteristics determine that one song out of the album? In trying to predict which songs will be in the Billboard 100, we can at least establish a baseline "No" model of deeming every song not worthy of getting into the Billboard 100 since so few of them do.</p>
 
-<p>TODO: Talk about Ridge Regression</p>
+<p>The first classifier we used to predict which songs were Billboard 100 material was a Logistic Regression model. We first split our dataset into testing and training datasets and then trained two separate models using L1 (Lasso) and L2 (Ridge) regularization to penalize and minimize contributions of additional variables to prevent overfitting. However, we seemed to be making the same decisions as a baseline "No" model and barely showed any improvement in differentiating between true positives and false positives with an area of 0.53 and 0.57 beneath the ROC curve for Lasso and Ridge respectively.</p>
 
-<p>Similarly, we attempted a Linear SVM. Unfortunately, as we noted from doing pre-analysis visualization of the song features, our features aren't easily linearly separable; what this entails is that finding a decision boundary by which to distinguish songs in the top 100 from songs not in the top 100. When we attempted this method, we found that it performed no better than the baseline. </p>
+<p>Similarly, we attempted a Linear SVM. Unfortunately, as we noted from doing pre-analysis visualization of the song features, our features aren't easily linearly separable; what this entails is that finding a decision boundary by which to distinguish songs in the top 100 from songs not in the top 100. When we attempted this method, we found that it performed a little better than Logistic Regression but barely better than baseline with area beneath the ROC curve of 0.57.</p>
 
-<p>What surprised us was the result from Random Forest. Even though this method revolves around using decision trees, it too wasn't performing better than the baseline. What this tells is that there are issues with our labeling or issues with our sample, since its indicative that our random forest decided the most optimal strategy was to predict negatively. </p>
+<p>Our best result was from a Random Forest classifier where the area under the ROC curve was 0.66, greater than both Logistic Regressions and the Linear SVM. It appeared that the decision tree model was able to somewhat differentiate Billboard 100 worthy and not-worthy songs based on the features we had in the data, or was at least attempting to do so since the confusion matrix was the only one to involve true negatives and false negatives. Still, the Random Forest classifier had a pretty low success rate and we wondered if there other techniques we could use to improve our models further.</p>
 
-<p>TODO: Talk about other methods</p>
+<p>One way we thought we could improve model success rate was through better feature selection. Using a score function based on pearson correlations, we attempted to select features that correlated highly with the response but not with each other. Thus, we hoped to build a model that could explain what features of songs were associated with Billboard 100 success, but didn't overfit. Unfortunately, training an SVM through Pearson pipeline feature selection didn't seem to improve our ROC curve scores.</p>
+
+<p>In addition, we noticed our dataset was wildly asymmetric and skewed towards negative responses by default. Thus, we decided to subset our training data so it had the same amount of negative and positive responses, creating a balanced dataset. After training an SVM on this balanced dataset, we noticed it didn't score higher than the SVM trained on the asymmetric training dataset.</p>
+
+<p>In conclusion, Random Forest performed the best out of our binary classifiers, with SVM and Logistic Ridge doing better than Logistic Lasso. Feature selection did not seem to improve performance of the classifiers, perhaps because there weren't many high correlating features to Billboard 100. Unfortunately, training models on a balanced dataset also did not significantly improve performance.</p>
 
 <h3>
 <a id="adding-lyrics-to-the-equation" class="anchor" href="#adding-lyrics-to-the-equation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding Lyrics to the Equation</h3>
@@ -70,17 +74,12 @@
 
 <p><img src="images/wordmap.png" alt="song_genres"></p>
 
-<h3>
-<a id="advanced-modeling" class="anchor" href="#advanced-modeling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Modeling</h3>
-
-<p>TODO: Do we even have these?</p>
+<p>After generating these results, we then created a predictor using them. For each song, we used the linear model and simply added together all of the values that the words in the songs had. This created another predictor for us to use in the final models.</p>
 
 <h3>
 <a id="our-results" class="anchor" href="#our-results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Our Results</h3>
 
-<p>This project highlighted a few important topics, the first being </p>
-
-<p>TODO: list our conclusions</p>
+<p>This project highlighted a few important topics, the first being that predicting billboard results is a very, very difficult task - there is a reason why people can't even predict who will be the next popular artist. The second was that often, despite much of the knowledge that we've learned about how to improve results in our models, it is difficult for a real-life dataset to also have the same kinds of improvements as theorized. The best example of this was when we balanced the dataset. In theory, a lot of the predictors have a base probability of 0.5, so balancing a dataset should improve performance significantly. However, in practice, we saw no improvement in results after attempting to balance this dataset.</p>
 
 <h3>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
