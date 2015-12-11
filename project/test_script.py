@@ -82,7 +82,7 @@ from project.store import fread
 fread(FILE)
 totallen = len(arts)
 i = 0
-for v in arts:
+for k,v in arts.iteritems():
 	singlelen = len(v.songs)*totallen
 	for k,v in v.songs.iteritems():
 		v.get_lyrics()
