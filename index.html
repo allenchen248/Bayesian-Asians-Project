@@ -26,7 +26,7 @@
 
 <p>Music is a huge part of our lives - from popular radio stations to our favorite artists, listening to music has not only become a source of relaxation and pleasure but a passion. We wanted to explore this area and dissect what makes some music, songs/artists more popular than others, to be able to predict the popularity of a song. </p>
 
-<p><img src="images/echonestlogo.jpeg" alt="echonestlogo"></p>
+<p><img src="images/echonestlogo.jpg" alt="echonestlogo"></p>
 
 <p>The source of our data is an API service called Echo Nest. They provide a wide coverage of data on detailed song information from millions of artists. Because of the diverse feature set they provide, we decided their data would best suit our inquiry as to what aspects of songs most strongly affect their popularity. </p>
 
@@ -42,11 +42,11 @@
 
 <p>When we attempted to take an initial look at our data, we found some interesting results. The genre distribution, for instance, was heavily skewed towards studio, vocal, and electric categories. </p>
 
-<p><img src="images/song_genres.jpeg" alt="song_genres"></p>
+<p><img src="images/song_genres.jpg" alt="song_genres"></p>
 
 <p>When we looked at the feature distribution, we mostly found normal distributions, nothing too crazy. Unfortunately, when we did a pairwise correlation plot between the features and colored the Top 100 different, we found that it was very difficult to distinguish the data points. This will have to be something we keep in mind moving forward. Even for predictors that appear to be very intuitive, such as the correlation between "dancability" and being in the Top 100, do not appear to be very helpful. </p>
 
-<p><img src="images/dancability_billboard.jpeg" alt="dbill"></p>
+<p><img src="images/dancability_billboard.jpg" alt="dbill"></p>
 
 <h3>
 <a id="initial-modelling" class="anchor" href="#initial-modelling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initial Modelling</h3>
@@ -65,7 +65,7 @@
 
 <p>In conclusion, Random Forest performed the best out of our binary classifiers, with SVM and Logistic Ridge doing better than Logistic Lasso. Feature selection did not seem to improve performance of the classifiers, perhaps because there weren't many high correlating features to Billboard 100. Unfortunately, training models on a balanced dataset also did not significantly improve performance. (Image below of results)</p>
 
-<p><img src="images/ROC.jpeg" alt="roc"></p>
+<p><img src="images/ROC.jpg" alt="roc"></p>
 
 <h3>
 <a id="adding-lyrics-to-the-equation" class="anchor" href="#adding-lyrics-to-the-equation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding Lyrics to the Equation</h3>
@@ -74,7 +74,7 @@
 
 <p>As a result, the other option that we had was to use the song lyrics directly and attempt to train a linear model on them. We thought that this would be an especially good idea for songs. Often times in other documents, the frequency of a word doesn't matter as much. However, with a song, a frequent word is usually used for repetition, so such a model, in theory, should work especially well for the problem at hand. After training a Lasso model on the data directly, we found that the words that worked best were a combination of nostalgic and angry words.</p>
 
-<p><img src="images/word_map.jpeg" alt="wordmap"></p>
+<p><img src="images/word_map.jpg" alt="wordmap"></p>
 
 <p>After generating these results, we then created a predictor using them. For each song, we used the linear model and simply added together all of the values that the words in the songs had. This created another predictor for us to use in the final models.</p>
 
