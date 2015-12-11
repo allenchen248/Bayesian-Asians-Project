@@ -42,7 +42,7 @@
 
 <p>When we attempted to take an initial look at our data, we found some interesting results. The genre distribution, for instance, was heavily skewed towards studio, vocal, and electric categories. </p>
 
-<p><img src="images/song_genres.png" alt="song_genres"></p>
+<p><img src="images/song_genres.jpeg" alt="song_genres"></p>
 
 <p>When we looked at the feature distribution, we mostly found normal distributions, nothing too crazy. Unfortunately, when we did a pairwise correlation plot between the features and colored the Top 100 different, we found that it was very difficult to distinguish the data points. This will have to be something we keep in mind moving forward. </p>
 
@@ -72,7 +72,7 @@
 
 <p>As a result, the other option that we had was to use the song lyrics directly and attempt to train a linear model on them. We thought that this would be an especially good idea for songs. Often times in other documents, the frequency of a word doesn't matter as much. However, with a song, a frequent word is usually used for repetition, so such a model, in theory, should work especially well for the problem at hand. After training a Lasso model on the data directly, we found that the words that worked best were a combination of nostalgic and angry words.</p>
 
-<p><img src="images/wordmap.png" alt="song_genres"></p>
+<p><img src="images/word_map.jpeg" alt="wordmap"></p>
 
 <p>After generating these results, we then created a predictor using them. For each song, we used the linear model and simply added together all of the values that the words in the songs had. This created another predictor for us to use in the final models.</p>
 
