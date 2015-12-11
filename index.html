@@ -26,7 +26,7 @@
 
 <p>Music is a huge part of our lives - from popular radio stations to our favorite artists, listening to music has not only become a source of relaxation and pleasure but a passion. We wanted to explore this area and dissect what makes some music, songs/artists more popular than others, to be able to predict the popularity of a song. </p>
 
-<p><img src="images/echonestlogo.png" alt="echonestlogo"></p>
+<p><img src="images/echonestlogo.jpeg" alt="echonestlogo"></p>
 
 <p>The source of our data is an API service called Echo Nest. They provide a wide coverage of data on detailed song information from millions of artists. Because of the diverse feature set they provide, we decided their data would best suit our inquiry as to what aspects of songs most strongly affect their popularity. </p>
 
@@ -57,14 +57,18 @@
 
 <p>Similarly, we attempted a Linear SVM. Unfortunately, as we noted from doing pre-analysis visualization of the song features, our features aren't easily linearly separable; what this entails is that finding a decision boundary by which to distinguish songs in the top 100 from songs not in the top 100. When we attempted this method, we found that it performed no better than the baseline. </p>
 
-<p>What surprised us was the result from Random Forest. Even though this method revolves around using decision trees, it too wasn't performing better than the baseline. What this tells is that there are issues with our labelling or issues with our sample, since its indicative that our random forest decided the most optimal strategy was to predict negatively. </p>
+<p>What surprised us was the result from Random Forest. Even though this method revolves around using decision trees, it too wasn't performing better than the baseline. What this tells is that there are issues with our labeling or issues with our sample, since its indicative that our random forest decided the most optimal strategy was to predict negatively. </p>
 
 <p>TODO: Talk about other methods</p>
 
 <h3>
 <a id="adding-lyrics-to-the-equation" class="anchor" href="#adding-lyrics-to-the-equation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding Lyrics to the Equation</h3>
 
-<p>TODO: Talk about Lyrics</p>
+<p>Our goal for this section was to generate a separate predictor that would allow us to better refine our model. We were of the opinion that songs were a little bit different from the reviews that we have analyzed in the past. While a specific song may have a topic, we believed that it wouldn't be helpful because songs that sing about many different things will make it into the Billboard Top 100 in any given year.</p>
+
+<p>As a result, the other option that we had was to use the song lyrics directly and attempt to train a linear model on them. We thought that this would be an especially good idea for songs. Often times in other documents, the frequency of a word doesn't matter as much. However, with a song, a frequent word is usually used for repetition, so such a model, in theory, should work especially well for the problem at hand. After training a Lasso model on the data directly, we found that the words that worked best were a combination of nostalgic and angry words.</p>
+
+<p><img src="images/wordmap.png" alt="song_genres"></p>
 
 <h3>
 <a id="advanced-modeling" class="anchor" href="#advanced-modeling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Modeling</h3>
